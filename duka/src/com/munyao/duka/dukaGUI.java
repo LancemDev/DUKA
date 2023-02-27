@@ -1,8 +1,11 @@
-/*
+package com.munyao.duka;/*
  *Lance Munyao
  * 150772
  * ICS 1.2D
  */
+
+import com.munyao.duka.Main;
+import com.munyao.duka.database;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +62,7 @@ public class dukaGUI extends JFrame implements ActionListener {
     private JTable table1;
     private JButton btnDeleteA;
 
-    //Linking to my database file that contains the database functions
+    //Linking to my com.munyao.duka.database file that contains the com.munyao.duka.database functions
     database db = new database();
 
     public dukaGUI() {
@@ -94,7 +97,7 @@ public class dukaGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cmbSearchB) {
-            //We can use this to search for items in the database after the combobox item is selected
+            //We can use this to search for items in the com.munyao.duka.database after the combobox item is selected
             String item = (String) cmbSearchB.getSelectedItem();
 
         }
@@ -153,7 +156,7 @@ public class dukaGUI extends JFrame implements ActionListener {
             pwdPasswordLA.setText("");
         }
         if (e.getSource() == btnUploadA) {
-            //Uploading new items in the database
+            //Uploading new items in the com.munyao.duka.database
             try {
                 String ItemName = txtItemNameA.getText();
                 int ItemPrice = Integer.parseInt(txtItemPriceA.getText());
@@ -211,7 +214,7 @@ public class dukaGUI extends JFrame implements ActionListener {
         }
         // search place order
         /*if(e.getSource()==btnOrderB){
-            //Searching for items in the database
+            //Searching for items in the com.munyao.duka.database
             db.viewStockTable(table1);
 
         }*/

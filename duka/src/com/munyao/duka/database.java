@@ -1,4 +1,4 @@
-/*
+package com.munyao.duka;/*
 *Lance Munyao
 * 150772
 * ICS 1.2D
@@ -116,7 +116,7 @@ public class database  {
         return success;
     }
 
-    //View columns in combo box from the database
+    //View columns in combo box from the com.munyao.duka.database
     public void viewColumn(JComboBox comboBox) throws SQLException {
         boolean success=false;
         try{
