@@ -1,6 +1,15 @@
+/*
+ *Lance Munyao
+ * 150772
+ * ICS 1.2D
+ */
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class dukaGUI extends JFrame implements ActionListener {
     private JPanel panel1;
@@ -15,7 +24,7 @@ public class dukaGUI extends JFrame implements ActionListener {
     private JPasswordField pwdPasswordLA;
     private JButton btnGoBackLA;
     private JButton btnLoginLA;
-    private JLabel lblAttendantIDLA;
+    private JLabel lblUsernameLA;
     private JLabel lblPasswordLA;
     private JTextField txtBuyerIDLB;
     private JPasswordField pwdPasswordLB;
@@ -26,12 +35,12 @@ public class dukaGUI extends JFrame implements ActionListener {
     private JTextField txtItemDescriptionA;
     private JButton btnCancelA;
     private JButton btnUploadA;
-    private JButton btnSearchB;
+    private JButton btnOrderB;
     private JLabel lblItemNameA;
     private JLabel lblItemPriceA;
     private JLabel lblItemDescriptionA;
     private JLabel lblSearchB;
-    private JComboBox comboBox1;
+    private JComboBox cmbSearchB;
     private JButton btnRegisterLA;
     private JTextField txtNameR;
     private JTextField txtUsernameR;
@@ -42,17 +51,20 @@ public class dukaGUI extends JFrame implements ActionListener {
     private JLabel lblNameR;
     private JLabel lblUsernameR;
     private JLabel lblPasswordR;
-    private JLabel lblCPasswordR;
-    private JTable table1;
     private JButton btnPlaceOrderB;
     private JButton btnCancelW;
+    private JButton btnResetLA;
+    private JButton btnResetA;
+    private JButton btnResetR;
+    private JTable table1;
+    private JButton btnDeleteA;
 
     //Linking to my database file that contains the database functions
     database db = new database();
 
     public dukaGUI() {
         this.setTitle("DUKA");
-        this.setSize(400, 400);
+        this.setSize(600, 600);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -66,19 +78,26 @@ public class dukaGUI extends JFrame implements ActionListener {
         btnGoBackLA.addActionListener((this));
         btnUploadA.addActionListener((this));
         btnCancelA.addActionListener((this));
-        btnSearchB.addActionListener((this));
+        btnOrderB.addActionListener((this));
         btnRegisterR.addActionListener(this);
         btnGoBackLA.addActionListener(this);
         btnGoBackR.addActionListener(this);
-        btnPlaceOrderB.addActionListener(this);
         btnRegisterLA.addActionListener(this);
         btnCancelW.addActionListener(this);
-
+        btnResetA.addActionListener(this);
+        btnResetLA.addActionListener(this);
+        btnResetR.addActionListener(this);
+        cmbSearchB.addActionListener(this);
+        btnDeleteA.addActionListener(this);
     }
 
     @Override
-    //Listening for actions performed on buttons
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == cmbSearchB) {
+            //We can use this to search for items in the database after the combobox item is selected
+            String item = (String) cmbSearchB.getSelectedItem();
+
+        }
         if (e.getSource() == btnAttendantW) {
             //moving to the login form for the attendant
             welcome.setVisible(false);
@@ -88,28 +107,50 @@ public class dukaGUI extends JFrame implements ActionListener {
             //Moving to the buyer panel
             welcome.setVisible(false);
             buyer.setVisible(true);
+            //Preload the item_id dropdown list
+            try {
+                db.viewColumn(cmbSearchB);
+                db.table_update(table1);
+            } catch (SQLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, e);
+            }
+
         }
-        if(e.getSource() == btnCancelW){
+        if (e.getSource() == btnCancelW) {
             //exiting the program from the welcome page
+            dispose();
         }
         if (e.getSource() == btnLoginLA) {
             //Login to attendant form
             try {
                 String userName = txtUsernameLA.getText();
                 String passwordA = pwdPasswordLA.getText();
-                if (db.login(userName,passwordA)) {
-                    loginA.setVisible(false);
-                    attendant.setVisible(true);
+                if (!(userName.isEmpty() || passwordA.isEmpty())) {
+                    if (db.login(userName, passwordA)) {
+                        loginA.setVisible(false);
+                        attendant.setVisible(true);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please fill in all the fields!");
                 }
             } catch (Exception em) {
                 JOptionPane.showMessageDialog(null, "Please enter all the fields");
                 String userName = txtUsernameLA.getText();
                 String passwordA = pwdPasswordLA.getText();
-                if (db.login(userName,passwordA)) {
+                if (db.login(userName, passwordA)) {
                     loginA.setVisible(false);
                     attendant.setVisible(true);
                 }
             }
+        }
+        if (e.getSource() == btnGoBackLA) {
+            //Going back from Login to the welcome page
+            loginA.setVisible(false);
+            welcome.setVisible(true);
+        }
+        if (e.getSource() == btnResetLA) {
+            txtUsernameLA.setText("");
+            pwdPasswordLA.setText("");
         }
         if (e.getSource() == btnUploadA) {
             //Uploading new items in the database
@@ -117,59 +158,93 @@ public class dukaGUI extends JFrame implements ActionListener {
                 String ItemName = txtItemNameA.getText();
                 int ItemPrice = Integer.parseInt(txtItemPriceA.getText());
                 String ItemDescription = txtItemDescriptionA.getText();
-                JOptionPane.showMessageDialog(this, ItemName + " has been added successfully!");
-                //if(!(ItemName.isEmpty() || ItemID==0 || ItemPrice==0 || ItemDescription.isEmpty())) {
-                    //JOptionPane.showMessageDialog(null, ItemName + " has been added successfully!");
-                //}
-            } catch (Exception el){
-                JOptionPane.showMessageDialog(null,"Please Try again");
+                db.upload(ItemName, ItemPrice, ItemDescription);
+            } catch (Exception el) {
+                JOptionPane.showMessageDialog(null, "Please Try again");
                 String ItemName = txtItemNameA.getText();
-                int ItemID = Integer.parseInt(txtItemIDA.getText());
                 int ItemPrice = Integer.parseInt(txtItemPriceA.getText());
                 String ItemDescription = txtItemDescriptionA.getText();
+                db.upload(ItemName, ItemPrice, ItemDescription);
             }
 
         }
-        if(e.getSource() == btnCancelA){
+        if (e.getSource() == btnResetA) {
+            txtItemNameA.setText("");
+            txtItemPriceA.setText("");
+            txtItemDescriptionA.setText("");
+
+        }
+        if (e.getSource() == btnCancelA) {
             //exiting the program from the attendant form
+            dispose();
         }
 
-        if(e.getSource() == btnRegisterLA){
+        if (e.getSource() == btnRegisterLA) {
             //moving from login to register
             loginA.setVisible(false);
             register.setVisible(true);
         }
-        if(e.getSource() == btnRegisterR){
+        if (e.getSource() == btnRegisterR) {
             //Registering and going back to login using the registered details
-            String name=txtNameR.getName();
-            String username=txtUsernameR.getName();
-            String password=psdPasswordR.getText();
-            String cpassword=psdCPasswordR.getText();
-            if(password==cpassword){
-                if(db.register(name,username,password)){
-                    JOptionPane.showMessageDialog(null,"Welcome "+username+". Use "+password+" to login now");
-                    register.setVisible(false);
-                    loginA.setVisible(true);
-                }
+            String name = txtNameR.getText();
+            String username = txtUsernameR.getText();
+            String password = psdPasswordR.getText();
+
+            if (db.register(name, username, password)) {
+                register.setVisible(false);
+                loginA.setVisible(true);
+            } else {
+                register.setVisible(false);
+                loginA.setVisible(true);
             }
-            register.setVisible(false);
-            loginA.setVisible(true);
         }
-        if(e.getSource() == btnGoBackR){
+        if (e.getSource() == btnResetR) {
+            txtNameR.setText("");
+            txtUsernameR.setText("");
+            psdPasswordR.setText("");
+            psdCPasswordR.setText("");
+        }
+        if (e.getSource() == btnGoBackR) {
             //takes you back from the register page to the login page
             register.setVisible(false);
             loginA.setVisible(true);
         }
         // search place order
-        if(e.getSource()==btnSearchB){
+        /*if(e.getSource()==btnOrderB){
             //Searching for items in the database
+            db.viewStockTable(table1);
 
-        }
-        if(e.getSource()==btnPlaceOrderB){
+        }*/
+        if (e.getSource() == btnOrderB) {
             //Placing orders from the items displayed
+            //getting the value from the combobox
+            cmbSearchB.getSelectedItem();
+            int choice = JOptionPane.showOptionDialog(this,
+                    "Do you want to save changes?",
+                    "Save changes?",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new Object[]{"Save", "Quit", "Don't Save"},
+                    "Save");
 
+            // Handle user choice
+            if (choice == JOptionPane.YES_OPTION) {
+                // Save changes
+                JOptionPane.showMessageDialog(null,"Order for "+cmbSearchB.getSelectedItem()+" has been placed successfully");
+            } else if (choice == JOptionPane.NO_OPTION) {
+                // Discard changes
+                dispose();
+            } else {
+                // Cancel
+            }
         }
-
-
+        if (e.getSource() == btnDeleteA) {
+            try {
+                db.deleteRecord(txtItemNameA);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
+    }
 }
