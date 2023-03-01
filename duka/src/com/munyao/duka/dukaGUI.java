@@ -62,7 +62,6 @@ public class dukaGUI extends JFrame implements ActionListener {
     private JTable table1;
     private JButton btnDeleteA;
 
-    //Linking to my com.munyao.duka.database file that contains the com.munyao.duka.database functions
     database db = new database();
 
     public dukaGUI() {
@@ -249,5 +248,9 @@ public class dukaGUI extends JFrame implements ActionListener {
                 throw new RuntimeException(ex);
             }
         }
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
