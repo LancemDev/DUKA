@@ -32,6 +32,7 @@ public class database  {
             ResultSet rs = statement.executeQuery(query);
             success = rs.next();
             rs.close();
+            //
 
             statement.close();
             connection.close();
