@@ -1,4 +1,5 @@
-package com.munyao.duka;/*
+package com.munyao.duka;
+/*
  *Lance Munyao
  * 150772
  * ICS 1.2D
