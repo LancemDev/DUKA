@@ -11,10 +11,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 public class database  {
     static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost:3306/db_lance_munyao150772";
+    static final String DATABASE_URL = "jdbc:mysql://sql7.freesqldatabase.com:3306/sql7607234";
 
-    static final String USER = "root";
-    static final String PASSWORD = "";
+    static final String USER = "sql7607234";
+    static final String PASSWORD = "tJlBwVmn4f";
     private Connection connection;
     private Statement statement;
 
