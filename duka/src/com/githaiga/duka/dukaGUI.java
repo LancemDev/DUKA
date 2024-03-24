@@ -1,9 +1,5 @@
 package com.munyao.duka;
-/*
- *Lance Munyao
- * 150772
- * ICS 1.2D
- */
+
 
 import com.munyao.duka.Main;
 import com.munyao.duka.database;
