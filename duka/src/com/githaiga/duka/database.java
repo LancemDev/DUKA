@@ -1,8 +1,4 @@
-package com.munyao.duka;/*
-*Lance Munyao
-* 150772
-* ICS 1.2D
- */
+package com.munyao.duka;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
